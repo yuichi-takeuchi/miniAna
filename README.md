@@ -4,14 +4,12 @@ An Igor Pro procedure with offers an analytical environment for miniature events
 ## Getting Started
 
 ### Prerequisites
-
 * tUtility (https://github.com/yuichi-takeuchi/tUtility)
 * SetWindowExt.XOP (http://fermi.uchicago.edu/freeware/LoomisWood/SetWindowExt.shtml)
 
 This code has been tested in Igor Pro version 6.3.7.2. for Windows and supposed to work in Igor Pro 6.1 or later.
 
 ### Installing
-
 1. Install Igor Pro 6.1 or later.
 2. Put GlobalProcedure.ipf of tUtility or its shortcut into the Igor Procedures folder, which is normally located at My Documents\WaveMetrics\Igor Pro 6 User Files\Igor Procedures.
 3. SetWindowExt.xop or its shortcut into the Igor Extensions folder, which is normally located at My Documents\WaveMetrics\Igor Pro 6 User Files\Igor Extensions.
@@ -33,8 +31,8 @@ This code has been tested in Igor Pro version 6.3.7.2. for Windows and supposed 
 We use [SemVer](http://semver.org/) for versioning.
 
 ## Releases
-
-Ver 1.0.0, 2017/06/xx
+* Ver 1.0.0, 2017/06/xx
+* Pre-release, 2017/06/06
 
 ## Authors
 * **Yuichi Takeuchi PhD** - *Initial work* - [GitHub](https://github.com/yuichi-takeuchi)
