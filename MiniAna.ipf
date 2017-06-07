@@ -1048,7 +1048,7 @@ Function t_MiniAutoSearch(ctrlName) : ButtonControl
 		W_PeakXLoc[i] = NaN
 	while(i+1 <= npnts_FLV)
 
-	//同じピークを削除する
+	// removing the overlapping timestamps
 	i = 0
 	do
 		If(numtype(W_PeakXLoc[i]) == 0)
@@ -1063,7 +1063,7 @@ Function t_MiniAutoSearch(ctrlName) : ButtonControl
 		Wavestats/Q/M=1 W_PeakXLoc
 	while(i< numpnts(W_PeakXLoc))
 
-	//InitialXを求める
+	// InitialX
 	Duplicate/O W_PeakXLoc, W_InitialXLoc
 	Duplicate/O $sdw root:Packages:MiniAna:line_a, root:Packages:MiniAna:line_b, root:Packages:MiniAna:line_c
 	Wave line_a = root:Packages:MiniAna:line_a
@@ -1085,7 +1085,7 @@ Function t_MiniAutoSearch(ctrlName) : ButtonControl
 	while(i<=npntsXLock)
 	
 		
-	//エリアの基準でふるいにかける
+	// area
 	Duplicate/O W_PeakXLoc, W_Area
 	i = 0
 	npntsXLock = numpnts(W_PeakXLoc)
@@ -1102,6 +1102,7 @@ Function t_MiniAutoSearch(ctrlName) : ButtonControl
 		i+=1
 	while(i <= npntsXLock)
 	
+	//
 	i = 0
 	do
 		If(ABS(W_Area[i])>=ABS(DetectArea))
@@ -1112,8 +1113,6 @@ Function t_MiniAutoSearch(ctrlName) : ButtonControl
 		Wavestats/Q/M=1 W_PeakXLoc
 	while(i<= V_npnts)
 	
-	
-	//ラベリングウェーブにラベルする
 	i=0
 	lw0 = NaN
 	lw1 = NaN
@@ -1150,8 +1149,8 @@ Function t_MiniAutoSearch(ctrlName) : ButtonControl
 	while(i+1<V_npnts)
 	
 	
-	//Tableにデータをappendしていく
-	//T0のWavelist
+	// append to table
+	// T0 wave list
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
@@ -1294,7 +1293,7 @@ Function t_MiniAutoSearch(ctrlName) : ButtonControl
 		SetDataFolder fldrsav0
 		
 		
-		//Serial&IEI
+		//Serial and IEI
 		FindLevel/P/Q Serial, 0
 		Variable InsertingPoint = V_LevelX
 		Serial[p,] = x + 1
@@ -1637,7 +1636,8 @@ Function t_DeletetWaveMiniRecordSingle()
 	Variable n = numpnts(Serial)
 	SVAR tWaveMini = root:Packages:MiniAna:tWaveMini
 	String SFL
-	//T0のWavelist
+	
+	//T0 Wavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
@@ -1680,7 +1680,8 @@ Function t_DeleteSelectedRecord(ctrlName) : ButtonControl
 	Variable plast = Str2Num(StringFromList(2, StringByKey("SELECTION", TableInfo("MiniAnaTable#T0", -2), ":"), ","))
 	Variable i = 0
 	String SFL
-	//T0のWavelist
+	
+	//T0 Wavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
@@ -1700,7 +1701,6 @@ Function t_DeleteSelectedRecord(ctrlName) : ButtonControl
 //	Variable InsertingPoint = DeletingPoint
 //	EventSerial = InsertingPoint + 1
 //	Variable point = InsertingPoint
-	
 	
 	t_Update_MiniLb2D()
 	
@@ -2048,7 +2048,7 @@ Function t_HookMiniAnaDaughter(infoStr)
 	endif
 	
 	if(cmpstr(event,"mousedown")==0)
-		//ParentグラフのRect
+		//Parent Rect
 		GetAxis/W=MiniAnaDaughterGraph/Q bottom
 		AX = V_min
 		RX = V_max - V_min
@@ -2261,7 +2261,7 @@ Function t_MiniEventDelete(ctrlName) : ButtonControl
 	Variable AX, RX, V_max_XD, V_min_XD, V_max_YD, V_min_YD
 	String SFL
 
-	//T0のWavelist
+	//T0 Wavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
@@ -2269,7 +2269,7 @@ Function t_MiniEventDelete(ctrlName) : ButtonControl
 
 	Variable PeakXLock = XLock[EventSerial - 1]
 
-	//ピークにカーソルBを置き、ラベリングウェーブのマークを消す
+	//
 	Cursor/W=MiniAnaDaughterGraph B $tWaveMini PeakXLock
 	lw0[pcsr(B)] = NaN
 	lw1[pcsr(B)] = NaN
@@ -2278,7 +2278,7 @@ Function t_MiniEventDelete(ctrlName) : ButtonControl
 	
 	Variable DeletingPoint = EventSerial - 1
 	Variable SerialN = numpnts(Serial)
-	//IEI&LabelingWave
+	//IEI and LabelingWave
 	ControlInfo/W=MiniAnaMain CheckInterEventInterval_tab63
 	If(V_value)
 		If(DeletingPoint !=0)
@@ -2332,7 +2332,7 @@ Function t_MiniEventDelete(ctrlName) : ButtonControl
 		endIf
 	endIf
 		
-	//各ウェーブのEventSerialを削除
+	//
 	i = 0
 	do
 		SFL = StringFromList(i, T0WL)
@@ -2350,7 +2350,7 @@ Function t_MiniEventDelete(ctrlName) : ButtonControl
 	EventSerial = InsertingPoint + 1
 	Variable point = InsertingPoint
 	
-	//Eventグラフのセットアキシス
+	//Event graph set axis
 //	EventXLock = XLock[point]
 //	If(StringMatch(EventWaveName,wvName[point]) == 1)
 //		EventWaveName = wvName[point]
@@ -2361,23 +2361,23 @@ Function t_MiniEventDelete(ctrlName) : ButtonControl
 //	endIf
 //	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*IsoCriteria), (EventXLock+1.1*IsoCriteria)
 	
-	//Eventグラフのカーソル
+	//Event graph cursor
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのセットアキシス
+	//Daughter graph set axis
 //	GetAxis/W = MiniAnaDaughterGraph bottom
 //	Variable graphwidth = V_max - V_min
 //	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
+	//Daughter graph set axis
 	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+ 10e-3
 //	DetectAreaDecayRange
 
-	//ParentグラフのRect
+	//Parent Rect
 //	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 //	AX = V_min
 //	RX = V_max - V_min
@@ -2389,7 +2389,7 @@ Function t_MiniEventDelete(ctrlName) : ButtonControl
 //	V_min_YD = V_min
 //	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
+	//Table event selection
 //	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
 	//Update display
@@ -2444,7 +2444,7 @@ Function t_Delete_Mini() //Marquee Control
 	Variable AX, RX, V_max_XD, V_min_XD, V_max_YD, V_min_YD
 	String SFL
 
-	//T0のWavelist
+	//T0 Wavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
@@ -2452,7 +2452,7 @@ Function t_Delete_Mini() //Marquee Control
 
 	Variable PeakXLock = XLock[EventSerial - 1]
 
-	//ピークにカーソルBを置き、ラベリングウェーブのマークを消す
+	//
 	Cursor/W=MiniAnaDaughterGraph B $tWaveMini PeakXLock
 	lw0[pcsr(B)] = NaN
 	lw1[pcsr(B)] = NaN
@@ -2463,7 +2463,7 @@ Function t_Delete_Mini() //Marquee Control
 	Print DeletingPoint
 	Variable SerialN = numpnts(Serial)
 	Print SerialN
-	//IEI&LabelingWave
+	//IEI  LabelingWave
 	ControlInfo/W=MiniAnaMain CheckInterEventInterval_tab63
 	If(V_value)
 		If(DeletingPoint !=0)
@@ -2518,7 +2518,7 @@ Function t_Delete_Mini() //Marquee Control
 		endIf
 	endIf
 		
-	//各ウェーブのEventSerialを削除
+	// 
 	i = 0
 	do
 		SFL = StringFromList(i, T0WL)
@@ -2536,7 +2536,7 @@ Function t_Delete_Mini() //Marquee Control
 	EventSerial = InsertingPoint + 1
 	Variable point = InsertingPoint
 	
-	//Eventグラフのセットアキシス
+	//Event graph set axis
 //	EventXLock = XLock[point]
 //	If(StringMatch(EventWaveName,wvName[point]) == 1)
 //		EventWaveName = wvName[point]
@@ -2547,23 +2547,23 @@ Function t_Delete_Mini() //Marquee Control
 //	endIf
 //	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*IsoCriteria), (EventXLock+1.1*IsoCriteria)
 	
-	//Eventグラフのカーソル
+	//Event graph cursor
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのセットアキシス
+	//Daughter graph set axis
 //	GetAxis/W = MiniAnaDaughterGraph bottom
 //	Variable graphwidth = V_max - V_min
 //	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
+	//Daughter graph set axis
 	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+10e-3
 //	DetectAreaDecayRange
 
-	//ParentグラフのRect
+	//Parent graph rect
 //	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 //	AX = V_min
 //	RX = V_max - V_min
@@ -2575,7 +2575,7 @@ Function t_Delete_Mini() //Marquee Control
 //	V_min_YD = V_min
 //	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
+	//Table event selection
 //	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
 	//Update display
@@ -2663,23 +2663,23 @@ Function t_MiniIsoAdAll(ctrlName) : ButtonControl
 	Variable AX, RX, V_max_XD, V_min_XD, V_max_YD, V_min_YD
 	String SFL
 
-	//T0のWavelist
+	//T0 wavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
 	SetDataFolder fldrsav0
 
-	//ピークをディテクト（マーキー＋Wavestatかカーソル）
+	//
 	Variable PeakXLoc = xcsr(B)
 	
-	//ピークにカーソルBを置き、ラベリングウェーブにマークする
+	//
 	Cursor/W=MiniAnaDaughterGraph B $tWaveMini PeakXLoc
 	lw0[pcsr(B)] = 1
 	lw1[pcsr(B)] = 1
 	luw0 = lw0
 	luw1 = lw1
 	
-	//各ウェーブのラストにポイントを挿入。Wave名と, XLockから挿入しようとしているイベントの位置をつかみ、リストとループを用いながら、pointを挿入する。そのポイントを変数に代入。
+	//
 	WaveStats/M=1/Q Serial
 	Variable npnts = V_npnts + 1
 	i = 0
@@ -2796,11 +2796,11 @@ Function t_MiniIsoAdAll(ctrlName) : ButtonControl
 	Execute t
 	SetDataFolder fldrsav0
 
-	//Serial&IEI
+	//Serial and IEI
 	FindLevel /Q Serial, 0
 	Variable InsertingPoint = V_LevelX
 	Serial[p,] = x + 1
-	//IEI&LabelingWave
+	//IEI and LabelingWaves
 	ControlInfo/W=MiniAnaMain CheckInterEventInterval_tab63
 	If(V_value)
 		If(InsertingPoint !=0)
@@ -2830,7 +2830,7 @@ Function t_MiniIsoAdAll(ctrlName) : ButtonControl
 	EventSerial = InsertingPoint + 1
 	Variable point = InsertingPoint
 	
-	//Eventグラフのセットアキシス
+	//Event graph set axis
 	EventXLock = XLock[point]
 	If(StringMatch(EventWaveName,wvName[point]) == 1)
 		EventWaveName = wvName[point]
@@ -2841,22 +2841,22 @@ Function t_MiniIsoAdAll(ctrlName) : ButtonControl
 	endIf
 	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*IsoCriteria), (EventXLock+1.1*IsoCriteria)
 	
-	//Eventグラフのカーソル
+	//Event graph cursor
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのセットアキシス
+	//Daughter
 //	GetAxis/W = MiniAnaDaughterGraph bottom
 //	Variable graphwidth = V_max - V_min
 //	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
+	//Daughter
 //	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 //	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 //	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+DetectAreaDecayRange
 
-	//ParentグラフのRect
+	//Parent graph Rect
 	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 	AX = V_min
 	RX = V_max - V_min
@@ -2868,7 +2868,7 @@ Function t_MiniIsoAdAll(ctrlName) : ButtonControl
 	V_min_YD = V_min
 	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
+	//Table event selection
 	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
 	//Update display
@@ -2949,23 +2949,23 @@ Function t_IsoAddAll_Mini() //Marquee Control
 			break;
 	endSwitch
 				
-	//T0のWavelist
+	//
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
 	SetDataFolder fldrsav0
 
-	//ピークをディテクト（マーキー＋Wavestatかカーソル）
+	//
 	Variable PeakXLoc = xcsr(B)
 	
-	//ピークにカーソルBを置き、ラベリングウェーブにマークする
+	//
 	Cursor/W=MiniAnaDaughterGraph B $tWaveMini PeakXLoc
 	lw0[pcsr(B)] = 1
 	lw1[pcsr(B)] = 1
 	luw0 = lw0
 	luw1 = lw1
 	
-	//各ウェーブのラストにポイントを挿入。Wave名と, XLockから挿入しようとしているイベントの位置をつかみ、リストとループを用いながら、pointを挿入する。そのポイントを変数に代入。
+	//
 	WaveStats/M=1/Q Serial
 	Variable npnts = V_npnts + 1
 	i = 0
@@ -3084,12 +3084,12 @@ Function t_IsoAddAll_Mini() //Marquee Control
 	Execute t
 	SetDataFolder fldrsav0
 
-	//Serial&IEI
+	//Serial and IEI
 	FindLevel /Q Serial, 0
 	Variable InsertingPoint = V_LevelX
 	Serial[p,] = x + 1
 	
-	//IEI&LabelingWave
+	//IEI and LabelingWave
 	ControlInfo/W=MiniAnaMain CheckInterEventInterval_tab63
 	If(V_value)
 		If(InsertingPoint !=0)
@@ -3118,7 +3118,7 @@ Function t_IsoAddAll_Mini() //Marquee Control
 	EventSerial = InsertingPoint + 1
 	Variable point = InsertingPoint
 	
-	//Eventグラフのセットアキシス
+	//
 	EventXLock = XLock[point]
 	If(StringMatch(EventWaveName,wvName[point]) == 1)
 		EventWaveName = wvName[point]
@@ -3129,22 +3129,22 @@ Function t_IsoAddAll_Mini() //Marquee Control
 	endIf
 	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*IsoCriteria), (EventXLock+1.1*IsoCriteria)
 	
-	//Eventグラフのカーソル
+	//
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのセットアキシス
+	//
 //	GetAxis/W = MiniAnaDaughterGraph bottom
 //	Variable graphwidth = V_max - V_min
 //	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
+	//
 //	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 //	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 //	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+DetectAreaDecayRange
 
-	//ParentグラフのRect
+	//
 	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 	AX = V_min
 	RX = V_max - V_min
@@ -3156,7 +3156,7 @@ Function t_IsoAddAll_Mini() //Marquee Control
 	V_min_YD = V_min
 	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
+	// 
 	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
 	//Update display
@@ -3214,23 +3214,19 @@ Function t_MiniCoAdAll(ctrlName) : ButtonControl
 	Variable AX, RX, V_max_XD, V_min_XD, V_max_YD, V_min_YD
 	String SFL
 
-	//T0のWavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
 	SetDataFolder fldrsav0
 
-	//ピークをディテクト（マーキー＋Wavestatかカーソル）
 	Variable PeakXLoc = xcsr(B)
 	
-	//ピークにカーソルBを置き、ラベリングウェーブにマークする
 	Cursor/W=MiniAnaDaughterGraph B $tWaveMini PeakXLoc
 	lw0[pcsr(B)] = 1
 	lw1[pcsr(B)] = NaN
 	luw0 = lw0
 	luw1 = lw1
 	
-	//各ウェーブのラストにポイントを挿入。Wave名と, XLockから挿入しようとしているイベントの位置をつかみ、リストとループを用いながら、pointを挿入する。そのポイントを変数に代入。
 	WaveStats/M=1/Q Serial
 	Variable npnts = V_npnts + 1
 	i = 0
@@ -3348,12 +3344,12 @@ Function t_MiniCoAdAll(ctrlName) : ButtonControl
 	Execute t
 	SetDataFolder fldrsav0
 
-	//Serial&IEI
+	//Serial and IEI
 	FindLevel /Q Serial, 0
 	Variable InsertingPoint = V_LevelX
 	Serial[p,] = x + 1
 	
-	//IEI&LabelingWave
+	//IEI and LabelingWave
 	ControlInfo/W=MiniAnaMain CheckInterEventInterval_tab63
 	If(V_value)
 		If(InsertingPoint !=0)
@@ -3385,7 +3381,6 @@ Function t_MiniCoAdAll(ctrlName) : ButtonControl
 	EventSerial = InsertingPoint + 1
 	Variable point = InsertingPoint
 	
-	//Eventグラフのセットアキシス
 	EventXLock = XLock[point]
 	If(StringMatch(EventWaveName,wvName[point]) == 1)
 		EventWaveName = wvName[point]
@@ -3396,22 +3391,18 @@ Function t_MiniCoAdAll(ctrlName) : ButtonControl
 	endIf
 	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*IsoCriteria), (EventXLock+1.1*IsoCriteria)
 	
-	//Eventグラフのカーソル
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのセットアキシス
 //	GetAxis/W = MiniAnaDaughterGraph bottom
 //	Variable graphwidth = V_max - V_min
 //	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
 //	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 //	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 //	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+DetectAreaDecayRange
 
-	//ParentグラフのRect
 	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 	AX = V_min
 	RX = V_max - V_min
@@ -3423,10 +3414,8 @@ Function t_MiniCoAdAll(ctrlName) : ButtonControl
 	V_min_YD = V_min
 	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
 	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
-	//Update display
 	MiniDispPeak = Peak[point]
 	MiniDispArea = AreaUC[point]
 	MiniDispRise = Rise[point]
@@ -3504,23 +3493,19 @@ Function t_CoAddAll_Mini() //Marquee Control
 			break;
 	endSwitch
 
-	//T0のWavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
 	SetDataFolder fldrsav0
 
-	//ピークをディテクト（マーキー＋Wavestatかカーソル）
 	Variable PeakXLoc = xcsr(B)
 	
-	//ピークにカーソルBを置き、ラベリングウェーブにマークする
 	Cursor/W=MiniAnaDaughterGraph B $tWaveMini PeakXLoc
 	lw0[pcsr(B)] = 1
 	lw1[pcsr(B)] = NaN
 	luw0 = lw0
 	luw1 = lw1
 	
-	//各ウェーブのラストにポイントを挿入。Wave名と, XLockから挿入しようとしているイベントの位置をつかみ、リストとループを用いながら、pointを挿入する。そのポイントを変数に代入。
 	WaveStats/M=1/Q Serial
 	Variable npnts = V_npnts + 1
 	i = 0
@@ -3638,12 +3623,12 @@ Function t_CoAddAll_Mini() //Marquee Control
 	Execute t
 	SetDataFolder fldrsav0
 
-	//Serial&IEI
+	//Serial and IEI
 	FindLevel /Q Serial, 0
 	Variable InsertingPoint = V_LevelX
 	Serial[p,] = x + 1
 	
-	//IEI&LabelingWave
+	//IEI and LabelingWave
 	ControlInfo/W=MiniAnaMain CheckInterEventInterval_tab63
 	If(V_value)
 		If(InsertingPoint !=0)
@@ -3675,7 +3660,6 @@ Function t_CoAddAll_Mini() //Marquee Control
 	EventSerial = InsertingPoint + 1
 	Variable point = InsertingPoint
 	
-	//Eventグラフのセットアキシス
 	EventXLock = XLock[point]
 	If(StringMatch(EventWaveName,wvName[point]) == 1)
 		EventWaveName = wvName[point]
@@ -3686,22 +3670,18 @@ Function t_CoAddAll_Mini() //Marquee Control
 	endIf
 	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*IsoCriteria), (EventXLock+1.1*IsoCriteria)
 	
-	//Eventグラフのカーソル
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのセットアキシス
 //	GetAxis/W = MiniAnaDaughterGraph bottom
 //	Variable graphwidth = V_max - V_min
 //	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
 //	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 //	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 //	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+DetectAreaDecayRange
 
-	//ParentグラフのRect
 	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 	AX = V_min
 	RX = V_max - V_min
@@ -3713,10 +3693,8 @@ Function t_CoAddAll_Mini() //Marquee Control
 	V_min_YD = V_min
 	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
 	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
-	//Update display
 	MiniDispPeak = Peak[point]
 	MiniDispArea = AreaUC[point]
 	MiniDispRise = Rise[point]
@@ -3770,16 +3748,13 @@ Function t_MiniIsoMdAll(ctrlName) : ButtonControl
 	Variable AX, RX, V_max_XD, V_min_XD, V_max_YD, V_min_YD
 	String SFL
 
-	//T0のWavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
 	SetDataFolder fldrsav0
 
-	//ピークをディテクト（マーキー＋Wavestatかカーソル）
 	Variable PeakXLoc = xcsr(B)
 	
-	//ピークにカーソルBを置き、ラベリングウェーブにマークする。以前の物は消去。
 	Cursor/W=MiniAnaDaughterGraph B $tWaveMini XLock[EventSerial-1]
 	Cursor/W=MiniAnaEventGraph B $tWaveMini XLock[EventSerial-1]
 	lw0[pcsr(B)] = NaN
@@ -3898,12 +3873,12 @@ Function t_MiniIsoMdAll(ctrlName) : ButtonControl
 //	Execute t
 //	SetDataFolder fldrsav0
 
-	//Serial&IEI
+	//Serial and IEI
 //	FindLevel /Q Serial, 0
 //	Variable InsertingPoint = V_LevelX
 //	Serial[p,] = x + 1
 	
-	//IEI&LabelingWave
+	//IEI and LabelingWave
 	ControlInfo/W=MiniAnaMain CheckInterEventInterval_tab63
 	If(V_value)
 		If(npnts !=0)
@@ -3945,7 +3920,6 @@ Function t_MiniIsoMdAll(ctrlName) : ButtonControl
 	EventSerial = npnts + 1
 	Variable point = npnts
 	
-	//Eventグラフのセットアキシス
 	EventXLock = XLock[point]
 	If(StringMatch(EventWaveName,wvName[point]) == 1)
 		EventWaveName = wvName[point]
@@ -3956,27 +3930,22 @@ Function t_MiniIsoMdAll(ctrlName) : ButtonControl
 	endIf
 	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*IsoCriteria), (EventXLock+1.1*IsoCriteria)
 	
-	//Eventグラフのカーソル
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのカーソル
 	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaDaughterGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのセットアキシス
 //	GetAxis/W = MiniAnaDaughterGraph bottom
 //	Variable graphwidth = V_max - V_min
 //	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
 //	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 //	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 //	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+DetectAreaDecayRange
 
-	//ParentグラフのRect
 	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 	AX = V_min
 	RX = V_max - V_min
@@ -3988,7 +3957,6 @@ Function t_MiniIsoMdAll(ctrlName) : ButtonControl
 	V_min_YD = V_min
 	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
 	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
 	//Update display
@@ -4069,16 +4037,13 @@ Function t_IsoModAll_Mini() //Marquee Control
 			break;
 	endSwitch
 
-	//T0のWavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
 	SetDataFolder fldrsav0
 
-	//ピークをディテクト（マーキー＋Wavestatかカーソル）
 	Variable PeakXLoc = xcsr(B)
 	
-	//ピークにカーソルBを置き、ラベリングウェーブにマークする。以前の物は消去。
 	Cursor/W=MiniAnaDaughterGraph B $tWaveMini XLock[EventSerial-1]
 	Cursor/W=MiniAnaEventGraph B $tWaveMini XLock[EventSerial-1]
 	lw0[pcsr(B)] = NaN
@@ -4197,12 +4162,12 @@ Function t_IsoModAll_Mini() //Marquee Control
 //	Execute t
 //	SetDataFolder fldrsav0
 
-	//Serial&IEI
+	//Serial and IEI
 //	FindLevel /Q Serial, 0
 //	Variable InsertingPoint = V_LevelX
 //	Serial[p,] = x + 1
 	
-	//IEI&LabelingWave
+	//IEI and LabelingWave
 	ControlInfo/W=MiniAnaMain CheckInterEventInterval_tab63
 	If(V_value)
 		If(npnts !=0)
@@ -4244,7 +4209,6 @@ Function t_IsoModAll_Mini() //Marquee Control
 	EventSerial = npnts + 1
 	Variable point = npnts
 	
-	//Eventグラフのセットアキシス
 	EventXLock = XLock[point]
 	If(StringMatch(EventWaveName,wvName[point]) == 1)
 		EventWaveName = wvName[point]
@@ -4255,27 +4219,22 @@ Function t_IsoModAll_Mini() //Marquee Control
 	endIf
 	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*IsoCriteria), (EventXLock+1.1*IsoCriteria)
 	
-	//Eventグラフのカーソル
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] xcsr(C)
 
-	//Daughterグラフのカーソル
 	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaDaughterGraph C $wvName[point] xcsr(C)
 
-	//Daughterグラフのセットアキシス
 //	GetAxis/W = MiniAnaDaughterGraph bottom
 //	Variable graphwidth = V_max - V_min
 //	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
 //	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 //	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 //	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+DetectAreaDecayRange
 
-	//ParentグラフのRect
 	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 	AX = V_min
 	RX = V_max - V_min
@@ -4287,10 +4246,8 @@ Function t_IsoModAll_Mini() //Marquee Control
 	V_min_YD = V_min
 	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
 	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
-	//Update display
 	MiniDispPeak = Peak[point]
 	MiniDispArea = AreaUC[point]
 	MiniDispRise = Rise[point]
@@ -4344,16 +4301,13 @@ Function t_MiniCoMdAll(ctrlName) : ButtonControl
 	Variable AX, RX, V_max_XD, V_min_XD, V_max_YD, V_min_YD
 	String SFL
 
-	//T0のWavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
 	SetDataFolder fldrsav0
 
-	//ピークをディテクト（マーキー＋Wavestatかカーソル）
 	Variable PeakXLoc = xcsr(B)
 	
-	//ピークにカーソルBを置き、ラベリングウェーブにマークする。以前の物は消去。
 	Cursor/W=MiniAnaDaughterGraph B $tWaveMini XLock[EventSerial-1]
 	Cursor/W=MiniAnaEventGraph B $tWaveMini XLock[EventSerial-1]
 	lw0[pcsr(B)] = NaN
@@ -4472,12 +4426,12 @@ Function t_MiniCoMdAll(ctrlName) : ButtonControl
 //	Execute t
 //	SetDataFolder fldrsav0
 
-	//Serial&IEI
+	//Serial and IEI
 //	FindLevel /Q Serial, 0
 //	Variable InsertingPoint = V_LevelX
 //	Serial[p,] = x + 1
 	
-	//IEI&LabelingWave
+	//IEI and LabelingWave
 	ControlInfo/W=MiniAnaMain CheckInterEventInterval_tab63
 	If(V_value)
 		If(npnts !=0)
@@ -4528,7 +4482,6 @@ Function t_MiniCoMdAll(ctrlName) : ButtonControl
 	EventSerial = npnts + 1
 	Variable point = npnts
 	
-	//Eventグラフのセットアキシス
 	EventXLock = XLock[point]
 	If(StringMatch(EventWaveName,wvName[point]) == 1)
 		EventWaveName = wvName[point]
@@ -4539,27 +4492,22 @@ Function t_MiniCoMdAll(ctrlName) : ButtonControl
 	endIf
 	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*IsoCriteria), (EventXLock+1.1*IsoCriteria)
 	
-	//Eventグラフのカーソル
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのカーソル
 	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaDaughterGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのセットアキシス
 //	GetAxis/W = MiniAnaDaughterGraph bottom
 //	Variable graphwidth = V_max - V_min
 //	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
 //	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 //	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 //	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+DetectAreaDecayRange
 
-	//ParentグラフのRect
 	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 	AX = V_min
 	RX = V_max - V_min
@@ -4571,7 +4519,6 @@ Function t_MiniCoMdAll(ctrlName) : ButtonControl
 	V_min_YD = V_min
 	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
 	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
 	//Update display
@@ -4652,16 +4599,13 @@ Function t_CoModAll_Mini() //Marquee Control
 			break;
 	endSwitch
 
-	//T0のWavelist
 	String fldrsav0 = GetDataFolder(1)
 	SetDataFolder root:Packages:MiniAna:
 	String T0WL = Wavelist("*", ";", "WIN:MiniAnaTable#T0")
 	SetDataFolder fldrsav0
 
-	//ピークをディテクト（マーキー＋Wavestatかカーソル）
 	Variable PeakXLoc = xcsr(B)
 	
-	//ピークにカーソルBを置き、ラベリングウェーブにマークする。以前の物は消去。
 	Cursor/W=MiniAnaDaughterGraph B $tWaveMini XLock[EventSerial-1]
 	Cursor/W=MiniAnaEventGraph B $tWaveMini XLock[EventSerial-1]
 	lw0[pcsr(B)] = NaN
@@ -4788,12 +4732,12 @@ Function t_CoModAll_Mini() //Marquee Control
 //	Execute t
 //	SetDataFolder fldrsav0
 
-	//Serial&IEI
+	//Serial and IEI
 //	FindLevel /Q Serial, 0
 //	Variable InsertingPoint = V_LevelX
 //	Serial[p,] = x + 1
 	
-	//IEI&LabelingWave
+	//IEI and LabelingWave
 	ControlInfo/W=MiniAnaMain CheckInterEventInterval_tab63
 	If(V_value)
 		If(npnts !=0)
@@ -4844,7 +4788,6 @@ Function t_CoModAll_Mini() //Marquee Control
 	EventSerial = npnts + 1
 	Variable point = npnts
 	
-	//Eventグラフのセットアキシス
 	EventXLock = XLock[point]
 	If(StringMatch(EventWaveName,wvName[point]) == 1)
 		EventWaveName = wvName[point]
@@ -4855,27 +4798,22 @@ Function t_CoModAll_Mini() //Marquee Control
 	endIf
 	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*IsoCriteria), (EventXLock+1.1*IsoCriteria)
 	
-	//Eventグラフのカーソル
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] xcsr(C)
 
-	//Daughterグラフのカーソル
 	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaDaughterGraph C $wvName[point] xcsr(C)
 	
-	//Daughterグラフのセットアキシス
 //	GetAxis/W = MiniAnaDaughterGraph bottom
 //	Variable graphwidth = V_max - V_min
 //	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
 //	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 //	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 //	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+DetectAreaDecayRange
 
-	//ParentグラフのRect
 	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 	AX = V_min
 	RX = V_max - V_min
@@ -4887,7 +4825,6 @@ Function t_CoModAll_Mini() //Marquee Control
 	V_min_YD = V_min
 	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
 	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
 	//Update display
@@ -5194,39 +5131,39 @@ Function t_BtEventPreNext(ctrlName) : ButtonControl
 	endSwitch
 	Variable point = EventSerial - 1
 
-	//Waveマッチング
+	//Wave matching 
 	If(StringMatch(EventWaveName,wvName[point]) != 1)
 		EventWaveName = wvName[point]
 		tWaveMini = wvName[point]
 		t_MiniMainDisplay("")
 	endIf
 	
-	//MainList選択
+	//MainList selection
 	Wave/T ListWave = root:Packages:MiniAna:Mini_WaveListWave
 	FindValue/TEXT=tWaveMini ListWave
 	ListBox /Z MiniWaveList_tab60 win=MiniAnaMain, selRow=(V_Value), row = (V_Value)
 	DoUpdate	
 	
-	//Eventグラフのセットアキシス
+	//Event graph set axis
 	EventXLock = XLock[point]
 	SetAxis/W = MiniAnaEventGraph bottom, (EventXLock-0.3*DetectIsoCriteria), (EventXLock+1.1*DetectIsoCriteria)
 	
-	//Eventグラフのカーソル
+	//Event graph cursor
 	Cursor/W=MiniAnaEventGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaEventGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaEventGraph C $wvName[point] XLock[point]+DetectAreaDecayRange
 	
-	//Daughterグラフのセットアキシス
+	//Daughter graph set axis
 	GetAxis/W = MiniAnaDaughterGraph/Q bottom
 	Variable graphwidth = V_max - V_min
 	SetAxis/W = MiniAnaDaughterGraph bottom, (XLock[point] - 0.2*graphwidth), (XLock[point] + 0.8*graphwidth)
 
-	//Daughterグラフのアキシス
+	//Daughter graph set axis
 	Cursor/W=MiniAnaDaughterGraph A $wvName[point] InitialX[point]
 	Cursor/W=MiniAnaDaughterGraph B $wvName[point] XLock[point]
 	Cursor/W=MiniAnaDaughterGraph C $wvName[point] XLock[point]+DetectAreaDecayRange
 
-	//ParentグラフのRect
+	//Parent graph Rect
 	GetAxis/W=MiniAnaDaughterGraph/Q bottom
 	AX = V_min
 	RX = V_max - V_min
@@ -5238,7 +5175,7 @@ Function t_BtEventPreNext(ctrlName) : ButtonControl
 	V_min_YD = V_min
 	t_ParentGraphMoveRect(V_max_XD, V_min_XD, V_max_YD, V_min_YD)
 
-	//Tableのイベントをセレクション
+	//Table event selection
 	ModifyTable/w=MiniAnaTable#T0 selection=(point,0,point,100,0,0)
 	
 	//Update display
