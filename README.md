@@ -37,7 +37,19 @@ This code has been tested in Igor Pro version 6.3.7.2. for Windows and supposed 
 13. "EventSum", "EventSumIX", and "EventSumAv" buttons on the MiniAnaTable will create and display an averaged wave from isolated events.
 
 ### Shortcut keys
-* 
+The following shortcut keys are available on the MiniAnaDaughterGraph window. 
+
+*During Marquee*
+* A: IsoAdAll
+* Shift + A: CoAdAll
+* M: IsoMdAll
+* Shift + M: CoMdAll
+
+*Others*
+* D: Delete
+* N: Next
+* C: LableW = NaN
+* E: EraceCursors
 
 ### Help
 * Click "Help" in "MiniAna" of Menu.
@@ -48,7 +60,7 @@ This code has been tested in Igor Pro version 6.3.7.2. for Windows and supposed 
 We use [SemVer](http://semver.org/) for versioning.
 
 ## Releases
-* Ver 1.0.0, 2017/06/xx
+* Ver 1.0.0, 2017/06/07
 * Prerelease, 2017/06/06
 
 ## Authors
