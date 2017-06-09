@@ -1,5 +1,5 @@
 # miniAna
-An Igor Pro procedure with offers an analytical environment for miniature events, written to analyze miniature EPSCs recorded in in vitro brain slice preparation of mice. Several parameters are obtained on each event (timestamps, amplitude, decay time, interevent interval etc) and the parameters can be exported as a comma-separated value file. Averaged trace of recorded events can also be prepared as a graph.
+An Igor Pro procedure which offers an analytical environment for miniature events, written to analyze miniature EPSCs recorded in in vitro brain slice preparation of mice. Several parameters are obtained on each event (timestamps, amplitude, decay time, interevent interval etc) and the parameters can be exported as a comma-separated value file. Averaged trace of recorded events can also be prepared as a graph.
 
 ## Getting Started
 
