@@ -4,6 +4,7 @@ An Igor Pro procedure which offers an analytical environment for miniature event
 ## Getting Started
 
 ### Prerequisites
+* IGOR Pro 6 (https://www.wavemetrics.com/)
 * tUtility (https://github.com/yuichi-takeuchi/tUtility)
 * SetWindowExt.XOP (http://fermi.uchicago.edu/freeware/LoomisWood/SetWindowExt.shtml)
 
