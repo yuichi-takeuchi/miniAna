@@ -1,13 +1,14 @@
 #pragma rtGlobals=1		// Use modern global access method.
-#pragma version = 1.00	
+#pragma version = 1.0.0	
 #include <FilterDialog> menus=0
 #pragma IgorVersion = 6.1	//Igor Pro 6.1 or later
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This procedure (miniAna) offers an analytical environment for miniature events.
-// Latest version is available at Github (https://github.com/yuichi-takeuchi/miniAna)
+// Latest version is available at Github (https://github.com/yuichi-takeuchi/miniAna).
 //
 // Prerequisites:
+//* Igor Pro 6.1 or later
 //* tUtility (https://github.com/yuichi-takeuchi/tUtility)
 //* SetWindowExt.XOP (http://fermi.uchicago.edu/freeware/LoomisWood/SetWindowExt.shtml)
 //
