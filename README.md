@@ -63,7 +63,6 @@ We use [SemVer](http://semver.org/) for versioning.
 
 ## Releases
 * Ver 1.0.0, 2017/06/07
-* Prerelease, 2017/06/06
 
 ## Authors
 * **Yuichi Takeuchi PhD** - *Initial work* - [GitHub](https://github.com/yuichi-takeuchi)
