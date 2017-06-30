@@ -28,7 +28,7 @@ This code has been tested in Igor Pro version 6.3.7.2. for Windows and supposed 
 3. Get or edit the target wave list (source waves) onto the list box on the Main tab of the MiniAnaMain window.
 4. Click "TablePrep" button on the MiniAnaTable window. The destination parameter table will appear on the window.
 5. Click "Display" button on the Main tab of the MiniAnaMain window.
-6. Click "AutoSearch" button on the Main tab of the MiniAnaMain window. If you do as Shift + AutoSearch, only preparation of manual detection of the target wave but not auto-search of events will occur.
+6. Click "AutoSearch" button on the Main tab of the MiniAnaMain window. If you do as Shift + AutoSearch, only preparation of manual detection for the target wave but not auto-search of events will occur.
 7. Optional: Shift + "Scale" button on the MiniAnaDaughterGraph window for typical graph scaling.
 8. After auto-search of events, do manual curation using "IsoAdAll", "CoAdAll", "IsoMdAll", "CoMdAll", "Delete", and "IsoTag" buttons or similar commands on the Marquee menu on the MiniAnaDaughterGraph. Iso and Co mean isolated and complex events, respectively. Complex events will not used for averaged event wave form. Ad means addition, which add a new event to the MiniAnaTable. Md means modify, which modify an already existing event on the table.
 9. Move on the next target wave on the target wave list by clicking "Next Sw" button on the MinianaDaughterGraph window. 
