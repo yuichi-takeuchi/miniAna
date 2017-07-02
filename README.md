@@ -62,7 +62,7 @@ The following shortcut keys are available on the MiniAnaDaughterGraph window.
 We use [SemVer](http://semver.org/) for versioning.
 
 ## Releases
-* Ver 1.0.1, 2017/07/01: Changes on defalt settings.
+* Ver 1.0.1, 2017/07/01: Changes on default settings.
 * Ver 1.0.0, 2017/06/07: The first release.
 
 ## Authors
