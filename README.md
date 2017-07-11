@@ -57,6 +57,7 @@ The following shortcut keys are available on the MiniAnaDaughterGraph window.
 
 ## DOI
 [![DOI](https://zenodo.org/badge/93521372.svg)](https://zenodo.org/badge/latestdoi/93521372)
+[![DOI](https://zenodo.org/badge/93521372.svg)](https://zenodo.org/badge/latestdoi/93521372)
 
 ## Versioning
 We use [SemVer](http://semver.org/) for versioning.
